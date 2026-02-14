@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import type { User, Session } from "@supabase/supabase-js";
+import type { AuthChangeEvent, User, Session } from "@supabase/supabase-js";
 import { getSupabaseBrowser } from "@/lib/supabase-browser";
 
 interface AuthContext {
@@ -25,8 +25,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const supabase = getSupabaseBrowser();
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
 
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(({ data }: { data: { session: Session | null } }) => {
       setSession(data.session);
       setUser(data.session?.user ?? null);
       setLoading(false);
@@ -34,17 +38,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    } = supabase.auth.onAuthStateChange(
+      (_event: AuthChangeEvent, newSession: Session | null) => {
       setSession(newSession);
       setUser(newSession?.user ?? null);
       setLoading(false);
-    });
+      }
+    );
 
     return () => subscription.unsubscribe();
   }, []);
 
   const signOut = async () => {
     const supabase = getSupabaseBrowser();
+    if (!supabase) {
+      return;
+    }
     await supabase.auth.signOut();
   };
 

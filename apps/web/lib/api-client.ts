@@ -15,6 +15,9 @@ type ApiResponse<T> = ApiOk<T> | ApiErr;
 
 async function getToken(): Promise<string | null> {
   const supabase = getSupabaseBrowser();
+  if (!supabase) {
+    return null;
+  }
   const { data } = await supabase.auth.getSession();
   return data.session?.access_token ?? null;
 }
