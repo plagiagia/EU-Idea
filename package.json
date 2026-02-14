@@ -1,0 +1,16 @@
+{
+  "name": "cbam-threshold-tracker",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @cbam/web",
+    "build": "npm run build -w @cbam/web",
+    "lint": "npm run lint -w @cbam/domain && npm run lint -w @cbam/web",
+    "test": "npm run test -w @cbam/domain",
+    "typecheck": "npm run typecheck -w @cbam/domain && npm run typecheck -w @cbam/web"
+  }
+}
