@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import { Space_Grotesk } from "next/font/google";
+import { AuthProvider } from "@/components/providers/auth-provider";
 import "./globals.css";
+
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "CBAM Threshold Tracker",
@@ -13,8 +17,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className={spaceGrotesk.variable}>
+      <body className="min-h-screen bg-background text-foreground antialiased">
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
